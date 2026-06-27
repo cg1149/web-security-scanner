@@ -200,10 +200,12 @@
 </head>
 <body>
 
-<div id="keybar" style="background:#a32d2d;color:#fff;padding:10px 20px;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-  <span>⚠ Enter your Anthropic API key to use the scanner:</span>
-  <input id="keyinput" type="password" placeholder="sk-ant-api03-..." style="flex:1;min-width:200px;padding:6px 10px;border-radius:6px;border:none;font-size:13px;color:#000"/>
-  <button onclick="window._ak=document.getElementById('keyinput').value;localStorage.setItem('anthropicKey',window._ak);document.getElementById('keybar').style.display='none';alert('Key saved! Now scan a URL.')" style="padding:6px 16px;background:#fff;color:#a32d2d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px">Save</button>
+<div id="keybar" style="background:#a32d2d;color:#fff;padding:12px 20px;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+  <span style="font-weight:600">⚠ Paste your Anthropic API key then press Enter:</span>
+  <input id="keyinput" type="password" placeholder="sk-ant-api03-..." 
+    style="flex:1;min-width:220px;padding:7px 12px;border-radius:6px;border:none;font-size:13px;color:#000;outline:none"
+    onkeydown="if(event.key==='Enter'){window._ak=this.value;localStorage.setItem('anthropicKey',this.value);document.getElementById('keybar').innerHTML='<span style=padding:4px>✅ API key saved! Now enter a URL below and click Full scan.</span>';document.getElementById('keybar').style.background='#3b6d11';}"/>
+  <span style="font-size:12px;opacity:0.8">(press Enter to save)</span>
 </div>
 <header>
   <div class="logo"><i class="ti ti-shield-check"></i></div>
