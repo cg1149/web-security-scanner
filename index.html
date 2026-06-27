@@ -200,6 +200,11 @@
 </head>
 <body>
 
+<div id="keybar" style="background:#a32d2d;color:#fff;padding:10px 20px;font-size:13px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+  <span>⚠ Enter your Anthropic API key to use the scanner:</span>
+  <input id="keyinput" type="password" placeholder="sk-ant-api03-..." style="flex:1;min-width:200px;padding:6px 10px;border-radius:6px;border:none;font-size:13px;color:#000"/>
+  <button onclick="window._ak=document.getElementById('keyinput').value;localStorage.setItem('anthropicKey',window._ak);document.getElementById('keybar').style.display='none';alert('Key saved! Now scan a URL.')" style="padding:6px 16px;background:#fff;color:#a32d2d;border:none;border-radius:6px;font-weight:600;cursor:pointer;font-size:13px">Save</button>
+</div>
 <header>
   <div class="logo"><i class="ti ti-shield-check"></i></div>
   <div>
@@ -319,7 +324,7 @@ function toggleSettings(){const panel=document.getElementById('settingsPanel');p
   if(ak){ localStorage.setItem('anthropicKey',ak); }
   if(gk){ localStorage.setItem('googleKey',gk); }
   alert('Settings saved! You can now scan.');
-}function getAnthropicKey(){return localStorage.getItem('anthropicKey')||';}
+}function getAnthropicKey(){return localStorage.getItem('anthropicKey')||window._ak||''}
 
 function row(k,v){return`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`}
 
@@ -982,6 +987,10 @@ function copyShareLink(){
 
 // Auto-scan if URL param present
 window.addEventListener('load',()=>{
+  if(localStorage.getItem('anthropicKey')){
+    const kb=document.getElementById('keybar');
+    if(kb) kb.style.display='none';
+  }
   renderHistory();
   if(!getAnthropicKey()){
     const banner=document.getElementById('apiKeyBanner');
