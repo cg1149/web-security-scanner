@@ -217,7 +217,7 @@
 <main>
 
   <!-- Settings -->
-  <div class="settings-panel" id="settingsPanel">
+  <div class="settings-panel" id="settingsPanel" style="display:block;">
     <h3>API Settings</h3>
     <div class="settings-row">
       <label>Anthropic API key <span style="color:var(--danger);font-size:11px">required</span></label>
@@ -239,6 +239,13 @@
 
   <!-- Scan input -->
   <div class="scan-card">
+    <div id="apiKeyBanner" style="background:var(--danger-bg);border:0.5px solid var(--danger-border);border-radius:var(--radius);padding:10px 14px;margin-bottom:12px;font-size:13px;color:var(--danger);display:none">
+      <strong>API key required</strong> — paste your Anthropic key below to use the scanner
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <input type="password" id="inlineApiKey" placeholder="sk-ant-api03-..." style="flex:1;padding:7px 10px;border:0.5px solid var(--danger-border);border-radius:var(--radius);background:var(--surface);color:var(--text);font-size:13px;outline:none"/>
+        <button onclick="saveInlineKey()" style="padding:7px 14px;border-radius:var(--radius);border:none;background:var(--accent);color:#fff;font-size:13px;cursor:pointer">Save key</button>
+      </div>
+    </div>
     <span class="scan-label">Enter a website URL to audit</span>
     <div class="url-row">
       <input type="text" id="urlInput" placeholder="https://example.com" autocomplete="off"/>
@@ -302,6 +309,10 @@ const OWASP={
 };
 
 // ─── Helpers ─────────────────────────────────────────────
+function saveInlineKey(){
+  const k=document.getElementById('inlineApiKey')?.value?.trim();
+  if(k){localStorage.setItem('anthropicKey',k);document.getElementById('apiKeyBanner').style.display='none';alert('API key saved! You can now scan.');}
+}
 function toggleSettings(){const panel=document.getElementById('settingsPanel');panel.classList.toggle('open');if(panel.classList.contains('open')){document.getElementById('anthropicKey').value=localStorage.getItem('anthropicKey')||';document.getElementById('googleKey').value=localStorage.getItem('googleKey')||';}}function saveSettings(){const ak=document.getElementById('anthropicKey').value.trim();const gk=document.getElementById('googleKey').value.trim();if(ak)localStorage.setItem('anthropicKey',ak);if(gk)localStorage.setItem('googleKey',gk);const msg=document.getElementById('saveMsg');msg.style.display='inline';setTimeout(()=>msg.style.display='none',2000);}function getAnthropicKey(){return localStorage.getItem('anthropicKey')||';}
 
 function row(k,v){return`<div class="info-row"><span class="info-key">${k}</span><span class="info-val">${v}</span></div>`}
@@ -967,8 +978,9 @@ function copyShareLink(){
 window.addEventListener('load',()=>{
   renderHistory();
   if(!getAnthropicKey()){
+    const banner=document.getElementById('apiKeyBanner');
+    if(banner) banner.style.display='block';
     document.getElementById('settingsPanel').classList.add('open');
-    document.getElementById('anthropicKey').focus();
   }
   const params=new URLSearchParams(location.search);
   if(params.get('url')){document.getElementById('urlInput').value=params.get('url');runScan();}
